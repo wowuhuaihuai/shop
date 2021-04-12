@@ -1,0 +1,6 @@
+@mixin ellipsis{
+    /* 文字过长自动显示...*/
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

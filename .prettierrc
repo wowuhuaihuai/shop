@@ -1,0 +1,11 @@
+{
+    "extends": [
+      "airbnb",
+      "prettier",
+      "prettier/react"
+    ],
+    "printWidth": 200, 
+    "htmlWhitespaceSensitivity": "ignore",
+    "semi": false,
+    "singleQuote": true
+  }
