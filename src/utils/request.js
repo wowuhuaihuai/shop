@@ -1,11 +1,3 @@
-/*
- * @Author       : your name
- * @Date         : 2021-04-07 22:31:41
- * @LastEditTime : 2021-04-08 16:48:13
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/utils/request.js
- */
 import axios from 'axios'
 
 // 实例化 axios 对象：默认域名，等待超时10s

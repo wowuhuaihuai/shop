@@ -1,11 +1,3 @@
-/*
- * @Author       : your name
- * @Date         : 2021-04-07 18:02:30
- * @LastEditTime : 2021-04-12 11:06:19
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/router/index.js
- */
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [

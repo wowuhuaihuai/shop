@@ -1,11 +1,3 @@
-<!--
- * @Author       : your name
- * @Date         : 2021-03-09 16:26:14
- * @LastEditTime : 2021-04-09 10:45:14
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/views/home/Nearby.vue
--->
 <template>
   <!-- 附近店铺组件（主要是店铺的列表） -->
   <div class="nearby">

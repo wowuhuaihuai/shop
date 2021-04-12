@@ -1,11 +1,3 @@
-<!--
- * @Author       : your name
- * @Date         : 2021-04-08 21:41:47
- * @LastEditTime : 2021-04-08 22:14:14
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/components/ShopInfo.vue
--->
 <template>
   <div class="shop">
     <img :src="item.imgUrl" alt="" class="shop__img" />

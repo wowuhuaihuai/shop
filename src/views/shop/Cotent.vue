@@ -1,12 +1,4 @@
-<!--
- * @Author       : your name
- * @Date         : 2021-04-09 11:30:47
- * @LastEditTime : 2021-04-09 23:17:31
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/views/product/Cotent.vue
--->
-<template>
+ <template>
   <div class="content">
     <div class="category">
       <div class="category__item category__item--active">全部商品</div>

@@ -1,11 +1,3 @@
-<!--
- * @Author       : your name
- * @Date         : 2021-04-07 23:21:19
- * @LastEditTime : 2021-04-09 23:03:48
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/components/Toast.vue
--->
 <template>
   <div id="toast">{{ message }}</div>
 </template>

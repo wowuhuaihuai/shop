@@ -1,11 +1,3 @@
-<!--
- * @Author       : your name
- * @Date         : 2021-04-07 18:07:28
- * @LastEditTime : 2021-04-09 23:07:36
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/views/register/Register.vue
--->
 <template>
   <div class="wrapper">
     <img src="http://www.dell-lee.com/imgs/vue3/user.png" alt="" class="wrapper__img" />

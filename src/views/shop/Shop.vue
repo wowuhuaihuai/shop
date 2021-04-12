@@ -1,11 +1,3 @@
-<!--
- * @Author       : your name
- * @Date         : 2021-04-08 22:32:43
- * @LastEditTime : 2021-04-09 11:32:34
- * @LastEditors  : Please set LastEditors
- * @Description  : In User Settings Edit
- * @FilePath     : /jingdong/src/views/shop/Shop.vue
--->
 <template>
   <div class="wrapper">
     <div class="search">
