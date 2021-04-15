@@ -22,7 +22,7 @@
             class="product__item__minus"
             @click="
               () => {
-                reduceItemToCart(shopId, item._id)
+                changeCartItemInfo(shopId, item._id, item, -1)
               }
             "
           >
@@ -33,7 +33,7 @@
             class="product__item__plus"
             @click="
               () => {
-                addItemToCart(shopId, item)
+                changeCartItemInfo(shopId, item._id, item, 1)
               }
             "
           >
@@ -72,16 +72,12 @@ const useCartEffect = () => {
   const store = useStore()
   // 提取 cartList
   const { cartList } = toRefs(store.state)
-  // 商品 + 的逻辑
-  const addItemToCart = (shopId, productInfo) => {
-    store.commit('addItemToCart', { shopId, productInfo })
-  }
-  // 商品 - 的逻辑
-  const reduceItemToCart = (shopId, productId) => {
-    store.commit('reduceItemToCart', { shopId, productId })
+  // 商品 +/- 的逻辑
+  const changeCartItemInfo = (shopId, productId, productInfo, num) => {
+    store.commit('changeCartItemInfo', { shopId, productId, productInfo, num})
   }
 
-  return { cartList, addItemToCart, reduceItemToCart }
+  return { cartList, changeCartItemInfo }
 }
 
 // 切换 tab 相关的逻辑
@@ -124,10 +120,10 @@ export default {
     const { handTabClick, currentTab } = useTabEffect()
     const { list } = useCurrentListEffect(currentTab, shopId)
 
-    const { cartList, addItemToCart, reduceItemToCart } = useCartEffect(shopId, list)
+    const { cartList, changeCartItemInfo } = useCartEffect(shopId, list)
     console.log('cartList', cartList?.shopId?.item._id || 0)
 
-    return { list, currentTab, handTabClick, categories, cartList, shopId, addItemToCart, reduceItemToCart }
+    return { list, currentTab, handTabClick, categories, cartList, shopId, changeCartItemInfo }
   }
 }
 </script>
