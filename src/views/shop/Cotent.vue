@@ -18,9 +18,27 @@
           </p>
         </div>
         <div class="product__item__number">
-          <div class="product__item__minus">-</div>
-          0
-          <div class="product__item__plus">+</div>
+          <div
+            class="product__item__minus"
+            @click="
+              () => {
+                reduceItemToCart(shopId, item._id)
+              }
+            "
+          >
+            -
+          </div>
+          {{ cartList?.[shopId]?.[item._id]?.count || 0 }}
+          <div
+            class="product__item__plus"
+            @click="
+              () => {
+                addItemToCart(shopId, item)
+              }
+            "
+          >
+            +
+          </div>
         </div>
       </div>
     </div>
@@ -31,6 +49,7 @@
 import { reactive, toRefs, ref, watchEffect } from 'vue'
 import { get } from '../../utils/request.js'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 const categories = [
   {
@@ -47,6 +66,24 @@ const categories = [
   }
 ]
 
+// 商品数量逻辑
+const useCartEffect = () => {
+  // 获取 store 实例
+  const store = useStore()
+  // 提取 cartList
+  const { cartList } = toRefs(store.state)
+  // 商品 + 的逻辑
+  const addItemToCart = (shopId, productInfo) => {
+    store.commit('addItemToCart', { shopId, productInfo })
+  }
+  // 商品 - 的逻辑
+  const reduceItemToCart = (shopId, productId) => {
+    store.commit('reduceItemToCart', { shopId, productId })
+  }
+
+  return { cartList, addItemToCart, reduceItemToCart }
+}
+
 // 切换 tab 相关的逻辑
 const useTabEffect = () => {
   const currentTab = ref(categories[0].tab)
@@ -57,11 +94,9 @@ const useTabEffect = () => {
 }
 
 // 获取列表内容的逻辑
-const useCurrentListEffect = currentTab => {
+const useCurrentListEffect = (currentTab, shopId) => {
   // 实例化路由
-  const route = useRoute()
-  // 通过路由获取店铺id
-  const shopId = route.params.id
+
   // 定义变量储存list数据
   const content = reactive({ list: [] })
 
@@ -83,9 +118,16 @@ const useCurrentListEffect = currentTab => {
 export default {
   name: 'Content',
   setup() {
+    const route = useRoute()
+    // 通过路由获取店铺id
+    const shopId = route.params.id
     const { handTabClick, currentTab } = useTabEffect()
-    const { list } = useCurrentListEffect(currentTab)
-    return { list, currentTab, handTabClick, categories }
+    const { list } = useCurrentListEffect(currentTab, shopId)
+
+    const { cartList, addItemToCart, reduceItemToCart } = useCartEffect(shopId, list)
+    console.log('cartList', cartList?.shopId?.item._id || 0)
+
+    return { list, currentTab, handTabClick, categories, cartList, shopId, addItemToCart, reduceItemToCart }
   }
 }
 </script>
