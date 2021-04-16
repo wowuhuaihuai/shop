@@ -2,40 +2,40 @@
   <div class="cart">
     <div class="product">
       <template v-for="item in productList" :key="item._id">
-      <div class="product__item" v-if="item.count > 0">
-        <img class="product__item__img" :src="item.imgUrl" alt="" />
-        <div class="product__item__detail">
-          <h4 class="product__item__title">{{ item.name }}</h4>
-          <p class="product__item__price">
-            <span class="product__item__yen">&yen;</span>
-            {{ item.price }}
-            <span class="product__item__origin">&yen;{{ item.oldPrice }}</span>
-          </p>
-        </div>
-        <div class="product__item__number">
-          <div
-            class="product__item__minus"
-            @click="
-              () => {
-                changeCartItemInfo(shopId, item._id, item, -1)
-              }
-            "
-          >
-            -
+        <div class="product__item" v-if="item.count > 0">
+          <img class="product__item__img" :src="item.imgUrl" alt="" />
+          <div class="product__item__detail">
+            <h4 class="product__item__title">{{ item.name }}</h4>
+            <p class="product__item__price">
+              <span class="product__item__yen">&yen;</span>
+              {{ item.price }}
+              <span class="product__item__origin">&yen;{{ item.oldPrice }}</span>
+            </p>
           </div>
-          {{ item.count || 0 }}
-          <div
-            class="product__item__plus"
-            @click="
-              () => {
-                changeCartItemInfo(shopId, item._id, item, 1)
-              }
-            "
-          >
-            +
+          <div class="product__item__number">
+            <div
+              class="product__item__minus"
+              @click="
+                () => {
+                  changeCartItemInfo(shopId, item._id, item, -1)
+                }
+              "
+            >
+              -
+            </div>
+            {{ item.count || 0 }}
+            <div
+              class="product__item__plus"
+              @click="
+                () => {
+                  changeCartItemInfo(shopId, item._id, item, 1)
+                }
+              "
+            >
+              +
+            </div>
           </div>
         </div>
-      </div>
       </template>
     </div>
     <div class="check">
@@ -58,14 +58,11 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from './commonCartEffect'
 
-const useCartEffect = () => {
+const useCartEffect = (shopId) => {
+  const { changeCartItemInfo } = useCommonCartEffect()
   // vuex 获取购物车数据
   const store = useStore()
   const cartList = store.state.cartList
-
-  // vue-router 获取店铺id
-  const route = useRoute()
-  const shopId = route.params.id
 
   // vue 计算属性 商品数量
   const total = computed(() => {
@@ -98,23 +95,21 @@ const useCartEffect = () => {
     // 保留小数点后两位
     return price.toFixed(2)
   })
-  return { total, price }
+  return { total, price, changeCartItemInfo }
 }
 
 export default {
   name: 'Cart',
   setup() {
-    const { total, price } = useCartEffect()
     const route = useRoute()
     const shopId = route.params.id
-    const store = useStore()
+    const { total, price, changeCartItemInfo } = useCartEffect(shopId)
+
     const productList = computed(() => {
-      console.log('store.state.cartList', store.state.cartList)
-      console.log('shopId', shopId)
-      console.log('productList', productList)
+      const store = useStore()
       return store.state.cartList?.[shopId] || []
     })
-    const { changeCartItemInfo } = useCommonCartEffect()
+
     return { total, price, productList, changeCartItemInfo }
   }
 }
