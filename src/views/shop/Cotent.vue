@@ -49,7 +49,7 @@
 import { reactive, toRefs, ref, watchEffect } from 'vue'
 import { get } from '../../utils/request.js'
 import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
+import { useCommonCartEffect } from './commonCartEffect'
 
 const categories = [
   {
@@ -65,20 +65,6 @@ const categories = [
     tab: 'fruit'
   }
 ]
-
-// 商品数量逻辑
-const useCartEffect = () => {
-  // 获取 store 实例
-  const store = useStore()
-  // 提取 cartList
-  const { cartList } = toRefs(store.state)
-  // 商品 +/- 的逻辑
-  const changeCartItemInfo = (shopId, productId, productInfo, num) => {
-    store.commit('changeCartItemInfo', { shopId, productId, productInfo, num})
-  }
-
-  return { cartList, changeCartItemInfo }
-}
 
 // 切换 tab 相关的逻辑
 const useTabEffect = () => {
@@ -120,7 +106,7 @@ export default {
     const { handTabClick, currentTab } = useTabEffect()
     const { list } = useCurrentListEffect(currentTab, shopId)
 
-    const { cartList, changeCartItemInfo } = useCartEffect(shopId, list)
+    const { cartList, changeCartItemInfo } = useCommonCartEffect(shopId, list)
     console.log('cartList', cartList?.shopId?.item._id || 0)
 
     return { list, currentTab, handTabClick, categories, cartList, shopId, changeCartItemInfo }
