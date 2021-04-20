@@ -1,8 +1,16 @@
 <template>
   <div class="cart">
     <div class="product">
+      <div class="product__header">
+        <div class="product__header__all" @click="() => setCartItmesChecked(shopId, allChecked)">
+          <span class="product__header__icon iconfont" v-html="allChecked ? '&#xe652;' : '&#xe6f7;'" />
+          全选
+        </div>
+        <div class="product__header__clear" @click="() => cleanCartProducts(shopId)">清空购物车</div>
+      </div>
       <template v-for="item in productList" :key="item._id">
         <div class="product__item" v-if="item.count > 0">
+          <div class="product__item__check iconfont" @click="() => changeCartItemChecked(shopId, item._id)" v-html="item.check ? '&#xe652;' : '&#xe6f7;'" />
           <img class="product__item__img" :src="item.imgUrl" alt="" />
           <div class="product__item__detail">
             <h4 class="product__item__title">{{ item.name }}</h4>
@@ -58,7 +66,7 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from './commonCartEffect'
 
-const useCartEffect = (shopId) => {
+const useCartEffect = shopId => {
   const { changeCartItemInfo } = useCommonCartEffect()
   // vuex 获取购物车数据
   const store = useStore()
@@ -90,12 +98,49 @@ const useCartEffect = (shopId) => {
     }
     // 循环变量计算商品总价
     for (const i in productList) {
-      price += productList[i].count * productList[i].price
+      // 商品被选中
+      if (productList[i].check) {
+        price += productList[i].count * productList[i].price
+      }
     }
     // 保留小数点后两位
     return price.toFixed(2)
   })
-  return { total, price, changeCartItemInfo }
+
+  // vue 计算属性 是否全选中
+  const allChecked = computed(() => {
+    // 根据购物车数据和店铺id获取购物车中店铺的商品信息
+    const productList = cartList[shopId]
+    let allChecked = true
+    // 循环变量计算商品总价
+    for (const i in productList) {
+      const product = productList[i]
+      // 商品被选中
+      if (product.count > 0 && !product.check) {
+        allChecked = false
+      }
+    }
+
+    return allChecked
+  })
+
+  // 点击选中icon的逻辑
+  const changeCartItemChecked = (shopId, productId) => {
+    store.commit('changeCartItemChecked', { shopId, productId })
+  }
+
+  // 清空购物车的逻辑
+  const cleanCartProducts = shopId => {
+    store.commit('cleanCartProducts', { shopId })
+  }
+
+  const setCartItmesChecked = () => {
+    console.log('allChecked', allChecked.value)
+    const allCheckedValue = allChecked.value
+
+    store.commit('setCartItmesChecked', { shopId, allCheckedValue })
+  }
+  return { total, price, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked }
 }
 
 export default {
@@ -103,14 +148,14 @@ export default {
   setup() {
     const route = useRoute()
     const shopId = route.params.id
-    const { total, price, changeCartItemInfo } = useCartEffect(shopId)
+    const { total, price, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked } = useCartEffect(shopId)
 
     const productList = computed(() => {
       const store = useStore()
       return store.state.cartList?.[shopId] || []
     })
 
-    return { total, price, productList, changeCartItemInfo }
+    return { total, price, allChecked, productList, changeCartItemInfo, changeCartItemChecked, shopId, cleanCartProducts, setCartItmesChecked }
   }
 }
 </script>
@@ -131,12 +176,39 @@ export default {
   overflow-y: scroll;
   flex: 1;
   background: #fff;
+  &__header {
+    display: flex;
+    line-height: 0.52rem;
+    border-bottom: 0.01rem solid #f1f1f1;
+    &__all {
+      font-size: 0.14rem;
+      width: 0.74rem;
+      margin-left: 0.18rem;
+    }
+    &__icon {
+      color: #0091ff;
+      font-size: 0.2rem;
+    }
+    &__clear {
+      flex: 1;
+      text-align: right;
+      font-size: 0.14rem;
+      clear: #333;
+      margin-right: 0.16rem;
+    }
+  }
   &__item {
     display: flex;
     padding: 0.12rem 0;
     margin: 0 0.16rem;
     border-bottom: 0.01rem solid $content-bgColor;
     position: relative;
+    &__check {
+      line-height: 0.47rem;
+      margin-right: 0.16rem;
+      font-size: 0.2rem;
+      color: #0091ff;
+    }
     &__img {
       width: 0.46rem;
       height: 0.46rem;

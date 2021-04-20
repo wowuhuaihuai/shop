@@ -28,7 +28,7 @@
           >
             -
           </div>
-          {{ item.count || 0 }}
+          {{ cartList?.[shopId]?.[item._id]?.count || 0 }}
           <div
             class="product__item__plus"
             @click="
@@ -106,9 +106,9 @@ export default {
     const { handTabClick, currentTab } = useTabEffect()
     const { list } = useCurrentListEffect(currentTab, shopId)
 
-    const { changeCartItemInfo } = useCommonCartEffect(shopId, list)
+    const { changeCartItemInfo, cartList } = useCommonCartEffect(shopId, list)
 
-    return { list, currentTab, handTabClick, categories, shopId, changeCartItemInfo }
+    return { list, currentTab, handTabClick, categories, shopId, changeCartItemInfo, cartList }
   }
 }
 </script>

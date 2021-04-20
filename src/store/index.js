@@ -24,6 +24,10 @@ export default createStore({
       }
       // 数量 +num
       product.count += num
+      // 只要加入购物车就表示选中
+      if (num > 0) {
+        product.check = true
+      }
       if (product.count < 0) {
         product.count = 0
       }
@@ -31,6 +35,34 @@ export default createStore({
       shopInfo[productId] = product
       // 再把店铺详情 shopInfo 赋值给 state.cartList[shopId]
       state.cartList[shopId] = shopInfo
+    },
+    changeCartItemChecked(state, payload) {
+      console.log(payload)
+      const { shopId, productId } = payload
+      const product = state.cartList[shopId][productId]
+      product.check = !product.check
+    },
+    cleanCartProducts(state, payload) {
+      const { shopId } = payload
+      state.cartList[shopId] = {}
+    },
+    setCartItmesChecked(state, payload) {
+      const { shopId, allCheckedValue } = payload
+      console.log('allCheckedValue', allCheckedValue)
+      const products = state.cartList[shopId]
+      if (products) {
+        if (allCheckedValue) {
+          for (const key in products) {
+            const product = products[key]
+            product.check = false
+          }
+        } else {
+          for (const key in products) {
+            const product = products[key]
+            product.check = true
+          }
+        }
+      }
     }
   },
   actions: {},
