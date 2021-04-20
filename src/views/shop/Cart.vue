@@ -1,10 +1,10 @@
 <template>
-  <div class="mask" v-if="showCart" @click="handleCartShowChange"></div>
+  <div class="mask" v-if="showCart && calculations.total > 0" @click="handleCartShowChange"></div>
   <div class="cart">
-    <div class="product" v-if="showCart">
+    <div class="product" v-if="showCart && calculations.total > 0">
       <div class="product__header">
-        <div class="product__header__all" @click="() => setCartItmesChecked(shopId, allChecked)">
-          <span class="product__header__icon iconfont" v-html="allChecked ? '&#xe652;' : '&#xe619;'" />
+        <div class="product__header__all" @click="() => setCartItmesChecked(shopId, calculations.allChecked)">
+          <span class="product__header__icon iconfont" v-html="calculations.allChecked ? '&#xe652;' : '&#xe619;'" />
           全选
         </div>
         <div class="product__header__clear"><span class="product__header__clear__btn" @click="() => cleanCartProducts(shopId)">清空购物车</span></div>
@@ -50,11 +50,11 @@
     <div class="check">
       <div class="check__icon">
         <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png" @click="handleCartShowChange" />
-        <div class="check__icon__tag">{{ total }}</div>
+        <div class="check__icon__tag">{{ calculations.total }}</div>
       </div>
       <div class="check__info">
         总计：
-        <span class="check__info__price">&yen; {{ price }}</span>
+        <span class="check__info__price">&yen; {{ calculations.price }}</span>
       </div>
       <div class="check__btn">去结算</div>
     </div>
@@ -69,64 +69,40 @@ import { useCommonCartEffect } from './commonCartEffect'
 
 // 获取购物车信息逻辑
 const useCartEffect = shopId => {
-  const { changeCartItemInfo } = useCommonCartEffect()
+  const { cartList, changeCartItemInfo } = useCommonCartEffect()
   // vuex 获取购物车数据
   const store = useStore()
-  const cartList = store.state.cartList
 
-  // vue 计算属性 商品数量
-  const total = computed(() => {
+  const calculations = computed(() => {
     // 根据购物车数据和店铺id获取购物车中店铺的商品信息
-    const productList = cartList[shopId]
-    let count = 0
+    const productList = cartList[shopId]?.productList
+    // 定义字典 总数量,总价,全选状态
+    const result = { total: 0, price: 0, allChecked: true }
+
     // 没有商品信息，商品数量默认wi0
-    if (!productList) {
-      return 0
-    }
-    // 循环变量计算商品数量
-    for (const i in productList) {
-      count += productList[i].count
-    }
-    return count
-  })
-
-  // vue 计算属性 商品总价
-  const price = computed(() => {
-    // 根据购物车数据和店铺id获取购物车中店铺的商品信息
-    const productList = cartList[shopId]
-    let price = 0
-    if (!productList) {
-      return 0
-    }
-    // 循环变量计算商品总价
-    for (const i in productList) {
-      // 商品被选中
-      if (productList[i].check) {
-        price += productList[i].count * productList[i].price
+    if (productList) {
+      // 循环变量计算商品数量
+      for (const i in productList) {
+        const product = productList[i]
+        result.total += product.count
+        // 商品被选中
+        if (product.check) {
+          result.price += product.count * product.price
+        }
+        // 商品没被选中
+        if (product.count > 0 && !product.check) {
+          result.allChecked = false
+        }
       }
     }
-    // 保留小数点后两位
-    return price.toFixed(2)
+    // 保留2位小数点
+    result.price = result.price.toFixed(2)
+
+    return result
   })
 
   const productList = computed(() => {
-    return cartList?.[shopId] || []
-  })
-  // vue 计算属性 是否全选中
-  const allChecked = computed(() => {
-    // 根据购物车数据和店铺id获取购物车中店铺的商品信息
-    const productList = cartList[shopId]
-    let allChecked = true
-    // 循环变量计算商品总价
-    for (const i in productList) {
-      const product = productList[i]
-      // 商品被选中
-      if (product.count > 0 && !product.check) {
-        allChecked = false
-      }
-    }
-
-    return allChecked
+    return cartList?.[shopId]?.productList || {}
   })
 
   // 点击选中icon的逻辑
@@ -140,13 +116,12 @@ const useCartEffect = shopId => {
   }
 
   // 全选/全不选
-  const setCartItmesChecked = () => {
+  const setCartItmesChecked = (shopId, allChecked) => {
     // 全选按钮的状态
-    const allCheckedValue = allChecked.value
-    store.commit('setCartItmesChecked', { shopId, allCheckedValue })
+    store.commit('setCartItmesChecked', { shopId, allChecked })
   }
 
-  return { total, price, productList, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked }
+  return { calculations, productList, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked }
 }
 
 // 展示隐藏购物车逻辑
@@ -169,9 +144,9 @@ export default {
 
     const { showCart, handleCartShowChange } = toggleCartEffect()
 
-    const { total, price, productList, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked } = useCartEffect(shopId)
+    const { calculations, productList, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked } = useCartEffect(shopId)
 
-    return { total, price, productList, allChecked, changeCartItemInfo, changeCartItemChecked, shopId, cleanCartProducts, setCartItmesChecked, showCart, handleCartShowChange }
+    return { calculations, productList, changeCartItemInfo, changeCartItemChecked, shopId, cleanCartProducts, setCartItmesChecked, showCart, handleCartShowChange }
   }
 }
 </script>

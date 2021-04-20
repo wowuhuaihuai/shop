@@ -22,18 +22,18 @@
             class="product__item__minus"
             @click="
               () => {
-                changeCartItemInfo(shopId, item._id, item, -1)
+                changeCartItem(shopId, item._id, item, -1, shopName)
               }
             "
           >
             -
           </div>
-          {{ cartList?.[shopId]?.[item._id]?.count || 0 }}
+          {{ getProductCartCount(shopId, item._id) }}
           <div
             class="product__item__plus"
             @click="
               () => {
-                changeCartItemInfo(shopId, item._id, item, 1)
+                changeCartItem(shopId, item._id, item, 1, shopName)
               }
             "
           >
@@ -47,6 +47,7 @@
 
 <script>
 import { reactive, toRefs, ref, watchEffect } from 'vue'
+import { useStore } from 'vuex'
 import { get } from '../../utils/request.js'
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from './commonCartEffect'
@@ -97,8 +98,31 @@ const useCurrentListEffect = (currentTab, shopId) => {
   return { list }
 }
 
+// 购物车相关逻辑
+const useCartEffect = () => {
+  const store = useStore()
+
+  const { changeCartItemInfo, cartList } = useCommonCartEffect()
+
+  const changeShopName = (shopId, shopName) => {
+    store.commit('changeShopName', { shopId, shopName })
+  }
+
+  const changeCartItem = (shopId, productId, item, num, shopName) => {
+    changeCartItemInfo(shopId, productId, item, num)
+    changeShopName(shopId, shopName)
+  }
+
+  const getProductCartCount = (shopId, productId) => {
+    return cartList?.[shopId]?.productList?.[productId]?.count || 0
+  }
+
+  return { cartList, changeCartItem, getProductCartCount }
+}
+
 export default {
   name: 'Content',
+  props: ['shopName'],
   setup() {
     const route = useRoute()
     // 通过路由获取店铺id
@@ -106,9 +130,9 @@ export default {
     const { handTabClick, currentTab } = useTabEffect()
     const { list } = useCurrentListEffect(currentTab, shopId)
 
-    const { changeCartItemInfo, cartList } = useCommonCartEffect(shopId, list)
+    const { cartList, changeCartItem, getProductCartCount } = useCartEffect()
 
-    return { list, currentTab, handTabClick, categories, shopId, changeCartItemInfo, cartList }
+    return { list, currentTab, handTabClick, categories, shopId, changeCartItem, cartList, getProductCartCount }
   }
 }
 </script>

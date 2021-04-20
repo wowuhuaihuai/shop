@@ -11,5 +11,5 @@ export const useCommonCartEffect = () => {
     store.commit('changeCartItemInfo', { shopId, productId, productInfo, num })
   }
 
-  return { changeCartItemInfo, cartList }
+  return { cartList, changeCartItemInfo }
 }

@@ -10,7 +10,7 @@
     <!-- 等img加载完成后，整个shopinfo才会展示出来 -->
     <ShopInfo :item="item" :hideBorder="true" v-show="item.imgUrl" />
   </div>
-  <Content />
+  <Content :shopName="item.name"/>
   <Cart />
 </template>
 
