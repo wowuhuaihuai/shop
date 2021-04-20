@@ -9,18 +9,14 @@ export default createStore({
     changeCartItemInfo(state, payload) {
       // 提取传过来的商铺id,商品信息
       const { shopId, productId, productInfo, num } = payload
-      //  获取商铺
-      let shopInfo = state.cartList[shopId]
-      // 如果 cartList 中还没有该商铺的详情，就赋值为 {}
-      if (!shopInfo) {
-        shopInfo = {}
-      }
+      //  获取商铺,如果 cartList 中还没有该商铺的详情，就赋值为 {}
+      const shopInfo = state.cartList[shopId] || {}
       // 获取商品详情
       let product = shopInfo[productId]
       // 如果 shopInfo 中还没有该商品的详情，就赋值为 productInfo，并把数量置为0
       if (!product) {
+        productInfo.count = 0
         product = productInfo
-        product.count = 0
       }
       // 数量 +num
       product.count += num

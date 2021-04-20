@@ -1,16 +1,17 @@
 <template>
+  <div class="mask" v-if="showCart" @click="handleCartShowChange"></div>
   <div class="cart">
-    <div class="product">
+    <div class="product" v-if="showCart">
       <div class="product__header">
         <div class="product__header__all" @click="() => setCartItmesChecked(shopId, allChecked)">
-          <span class="product__header__icon iconfont" v-html="allChecked ? '&#xe652;' : '&#xe6f7;'" />
+          <span class="product__header__icon iconfont" v-html="allChecked ? '&#xe652;' : '&#xe619;'" />
           全选
         </div>
-        <div class="product__header__clear" @click="() => cleanCartProducts(shopId)">清空购物车</div>
+        <div class="product__header__clear"><span class="product__header__clear__btn" @click="() => cleanCartProducts(shopId)">清空购物车</span></div>
       </div>
       <template v-for="item in productList" :key="item._id">
         <div class="product__item" v-if="item.count > 0">
-          <div class="product__item__check iconfont" @click="() => changeCartItemChecked(shopId, item._id)" v-html="item.check ? '&#xe652;' : '&#xe6f7;'" />
+          <div class="product__item__check iconfont" @click="() => changeCartItemChecked(shopId, item._id)" v-html="item.check ? '&#xe652;' : '&#xe619;'" />
           <img class="product__item__img" :src="item.imgUrl" alt="" />
           <div class="product__item__detail">
             <h4 class="product__item__title">{{ item.name }}</h4>
@@ -48,7 +49,7 @@
     </div>
     <div class="check">
       <div class="check__icon">
-        <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png" />
+        <img class="check__icon__img" src="http://www.dell-lee.com/imgs/vue3/basket.png" @click="handleCartShowChange" />
         <div class="check__icon__tag">{{ total }}</div>
       </div>
       <div class="check__info">
@@ -61,11 +62,12 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useCommonCartEffect } from './commonCartEffect'
 
+// 获取购物车信息逻辑
 const useCartEffect = shopId => {
   const { changeCartItemInfo } = useCommonCartEffect()
   // vuex 获取购物车数据
@@ -107,6 +109,9 @@ const useCartEffect = shopId => {
     return price.toFixed(2)
   })
 
+  const productList = computed(() => {
+    return cartList?.[shopId] || []
+  })
   // vue 计算属性 是否全选中
   const allChecked = computed(() => {
     // 根据购物车数据和店铺id获取购物车中店铺的商品信息
@@ -134,13 +139,26 @@ const useCartEffect = shopId => {
     store.commit('cleanCartProducts', { shopId })
   }
 
+  // 全选/全不选
   const setCartItmesChecked = () => {
-    console.log('allChecked', allChecked.value)
+    // 全选按钮的状态
     const allCheckedValue = allChecked.value
-
     store.commit('setCartItmesChecked', { shopId, allCheckedValue })
   }
-  return { total, price, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked }
+
+  return { total, price, productList, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked }
+}
+
+// 展示隐藏购物车逻辑
+const toggleCartEffect = () => {
+  // 购物车显示与否的状态
+  const showCart = ref(false)
+
+  // 改变购物车显示的逻辑
+  const handleCartShowChange = () => {
+    showCart.value = !showCart.value
+  }
+  return { showCart, handleCartShowChange }
 }
 
 export default {
@@ -148,14 +166,12 @@ export default {
   setup() {
     const route = useRoute()
     const shopId = route.params.id
-    const { total, price, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked } = useCartEffect(shopId)
 
-    const productList = computed(() => {
-      const store = useStore()
-      return store.state.cartList?.[shopId] || []
-    })
+    const { showCart, handleCartShowChange } = toggleCartEffect()
 
-    return { total, price, allChecked, productList, changeCartItemInfo, changeCartItemChecked, shopId, cleanCartProducts, setCartItmesChecked }
+    const { total, price, productList, allChecked, changeCartItemInfo, changeCartItemChecked, cleanCartProducts, setCartItmesChecked } = useCartEffect(shopId)
+
+    return { total, price, productList, allChecked, changeCartItemInfo, changeCartItemChecked, shopId, cleanCartProducts, setCartItmesChecked, showCart, handleCartShowChange }
   }
 }
 </script>
@@ -164,6 +180,15 @@ export default {
 @import '../../style/viriables.scss';
 @import '../../style/mixins.scss';
 
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba($color: #000000, $alpha: 0.5);
+  z-index: 1;
+}
 .cart {
   position: absolute;
   left: 0;
@@ -171,30 +196,37 @@ export default {
   // height: 0.49rem;
   width: 100%;
   box-shadow: 0 -1px 1px 0 $content-bgColor;
+  z-index: 2;
+  background: $bgColor;
 }
 .product {
   overflow-y: scroll;
   flex: 1;
-  background: #fff;
+  background: $bgColor;
   &__header {
     display: flex;
     line-height: 0.52rem;
-    border-bottom: 0.01rem solid #f1f1f1;
+    border-bottom: 0.01rem solid $content-bgColor;
     &__all {
       font-size: 0.14rem;
       width: 0.74rem;
       margin-left: 0.18rem;
     }
     &__icon {
-      color: #0091ff;
+      vertical-align: top;
+      margin-right: 0.1rem;
+      color: $btn-bgColor;
       font-size: 0.2rem;
     }
     &__clear {
       flex: 1;
       text-align: right;
       font-size: 0.14rem;
-      clear: #333;
+      clear: $content-fontColor;
       margin-right: 0.16rem;
+      &__btn {
+        display: inline-block;
+      }
     }
   }
   &__item {
@@ -207,7 +239,7 @@ export default {
       line-height: 0.47rem;
       margin-right: 0.16rem;
       font-size: 0.2rem;
-      color: #0091ff;
+      color: $btn-bgColor;
     }
     &__img {
       width: 0.46rem;
@@ -244,7 +276,7 @@ export default {
       position: absolute;
       right: 0;
       bottom: 0;
-      margin-bottom: 0.12rem;
+      margin-bottom: 0.26rem;
     }
     &__minus,
     &__plus {
