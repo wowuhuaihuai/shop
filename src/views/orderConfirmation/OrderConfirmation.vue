@@ -2,7 +2,7 @@
   <div class="wrapper">
     <div class="top">
       <div class="top__header">
-        <div class="top__header__back iconfont">&#xe600;</div>
+        <div class="top__header__back iconfont" @click="handleBack">&#xe600;</div>
         确认订单
       </div>
       <div class="top__receiver">
@@ -17,29 +17,125 @@
     </div>
     <div class="products">
       <div class="products__title">{{ shopName }}</div>
-      <template v-for="item in productList" :key="item._id">
-        <div class="products__item" v-if="item.count > 0">
-          <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
-          <div class="products__item__detail">
-            <h4 class="products__item__title">{{ item.name }}</h4>
-            <p class="products__item__price">
-              <span>
-                <span class="products__item__yen">&yen;</span>
-                {{ item.price }}x{{ item.count }}
-              </span>
-              <span class="products__item__total">
-                <span class="products__item__yen">&yen;</span>
-                {{ item.price * item.count }}
-              </span>
-            </p>
+      <div class="products__list">
+        <template v-for="item in productList" :key="item._id">
+          <div class="products__item" v-if="item.count > 0">
+            <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
+            <div class="products__item__detail">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span>
+                  {{ item.price }}x{{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span>
+                  {{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-      </template>
+        </template>
+        <template v-for="item in productList" :key="item._id">
+          <div class="products__item" v-if="item.count > 0">
+            <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
+            <div class="products__item__detail">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span>
+                  {{ item.price }}x{{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span>
+                  {{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </template>
+                <template v-for="item in productList" :key="item._id">
+          <div class="products__item" v-if="item.count > 0">
+            <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
+            <div class="products__item__detail">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span>
+                  {{ item.price }}x{{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span>
+                  {{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </template>
+                <template v-for="item in productList" :key="item._id">
+          <div class="products__item" v-if="item.count > 0">
+            <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
+            <div class="products__item__detail">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span>
+                  {{ item.price }}x{{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span>
+                  {{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </template>
+                <template v-for="item in productList" :key="item._id">
+          <div class="products__item" v-if="item.count > 0">
+            <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
+            <div class="products__item__detail">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span>
+                  {{ item.price }}x{{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span>
+                  {{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </template>
+                <template v-for="item in productList" :key="item._id">
+          <div class="products__item" v-if="item.count > 0">
+            <img class="products__item__img" :src="item.imgUrl" :alt="item.name" />
+            <div class="products__item__detail">
+              <h4 class="products__item__title">{{ item.name }}</h4>
+              <p class="products__item__price">
+                <span>
+                  <span class="products__item__yen">&yen;</span>
+                  {{ item.price }}x{{ item.count }}
+                </span>
+                <span class="products__item__total">
+                  <span class="products__item__yen">&yen;</span>
+                  {{ (item.price * item.count).toFixed(2) }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </template>
+      </div>
+    </div>
+    <div class="order">
+      <div class="order__price">实付金额 &yen;{{ calculations.price }}</div>
+      <div class="order__btn">提交订单</div>
     </div>
   </div>
 </template>
 <script>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCommonCartEffect } from '../../effects/cartEffects'
 
 export default {
@@ -47,9 +143,12 @@ export default {
   setup() {
     const route = useRoute()
     const shopId = route.params.id
-
-    const { productList, shopName } = useCommonCartEffect(shopId)
-    return { shopId, productList, shopName }
+    const router = useRouter()
+    const handleBack = () => {
+      router.back()
+    }
+    const { productList, shopName, calculations } = useCommonCartEffect(shopId)
+    return { shopId, productList, shopName, calculations, handleBack }
   }
 }
 </script>
@@ -129,12 +228,22 @@ export default {
 .products {
   margin: 0.53rem 0.18rem 0.55rem 0.18rem;
   background: #ffffff;
-  border-radius: 4px;
-  border-radius: 4px;
+  border-radius: .04rem .04rem 0 0;
   &__title {
-    padding: 0.16rem 0 0 0.16rem;
+    padding: 0.16rem 0 0.16rem 0.16rem;
     font-size: 0.16rem;
     color: #333333;
+  }
+  &__list {
+    overflow-y: scroll;
+    position: absolute;
+    bottom: 0.6rem;
+    top: 2.6rem;
+    left: .18rem;
+    right: .18rem;
+    background: #fff;
+    border-radius: 0 0 .04rem .04rem;
+
   }
   &__item {
     display: flex;
@@ -170,6 +279,30 @@ export default {
     &__yen {
       font-size: 0.12rem;
     }
+  }
+}
+.order {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  height: 0.49rem;
+  line-height: 0.49rem;
+  &__price {
+    flex: 1;
+    background: #ffffff;
+    font-size: 0.14rem;
+    color: #333333;
+    text-indent: 0.24rem;
+  }
+  &__btn {
+    width: 0.98rem;
+    height: 0.49rem;
+    background: #4fb0f9;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
   }
 }
 </style>
