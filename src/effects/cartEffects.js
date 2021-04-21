@@ -14,7 +14,15 @@ export const useCommonCartEffect = shopId => {
 
   // 商铺的商品列表
   const productList = computed(() => {
-    return cartList?.[shopId]?.productList || {}
+    const noEmptyProducts = {}
+    const products = cartList?.[shopId]?.productList || {}
+    // 把数量为0的剔除
+    for (const i in products) {
+      if (products[i].count > 0) {
+        noEmptyProducts[i] = products[i]
+      }
+    }
+    return noEmptyProducts
   })
   // 商品的店名
   const shopName = computed(() => {
@@ -49,5 +57,10 @@ export const useCommonCartEffect = shopId => {
     return result
   })
 
-  return { cartList, productList, shopName, calculations, changeCartItemInfo }
+  // 清空购物车的逻辑
+  const cleanCartProducts = shopId => {
+    store.commit('cleanCartProducts', { shopId })
+  }
+
+  return { cartList, productList, shopName, calculations, changeCartItemInfo, cleanCartProducts }
 }

@@ -9,43 +9,41 @@
         </div>
         <div class="product__header__clear"><span class="product__header__clear__btn" @click="() => cleanCartProducts(shopId)">清空购物车</span></div>
       </div>
-      <template v-for="item in productList" :key="item._id">
-        <div class="product__item" v-if="item.count > 0">
-          <div class="product__item__check iconfont" @click="() => changeCartItemChecked(shopId, item._id)" v-html="item.check ? '&#xe652;' : '&#xe619;'" />
-          <img class="product__item__img" :src="item.imgUrl" alt="" />
-          <div class="product__item__detail">
-            <h4 class="product__item__title">{{ item.name }}</h4>
-            <p class="product__item__price">
-              <span class="product__item__yen">&yen;</span>
-              {{ item.price }}
-              <span class="product__item__origin">&yen;{{ item.oldPrice }}</span>
-            </p>
+      <div class="product__item" v-for="item in productList" :key="item._id">
+        <div class="product__item__check iconfont" @click="() => changeCartItemChecked(shopId, item._id)" v-html="item.check ? '&#xe652;' : '&#xe619;'" />
+        <img class="product__item__img" :src="item.imgUrl" alt="" />
+        <div class="product__item__detail">
+          <h4 class="product__item__title">{{ item.name }}</h4>
+          <p class="product__item__price">
+            <span class="product__item__yen">&yen;</span>
+            {{ item.price }}
+            <span class="product__item__origin">&yen;{{ item.oldPrice }}</span>
+          </p>
+        </div>
+        <div class="product__item__number">
+          <div
+            class="product__item__minus"
+            @click="
+              () => {
+                changeCartItemInfo(shopId, item._id, item, -1)
+              }
+            "
+          >
+            -
           </div>
-          <div class="product__item__number">
-            <div
-              class="product__item__minus"
-              @click="
-                () => {
-                  changeCartItemInfo(shopId, item._id, item, -1)
-                }
-              "
-            >
-              -
-            </div>
-            {{ item.count || 0 }}
-            <div
-              class="product__item__plus"
-              @click="
-                () => {
-                  changeCartItemInfo(shopId, item._id, item, 1)
-                }
-              "
-            >
-              +
-            </div>
+          {{ item.count || 0 }}
+          <div
+            class="product__item__plus"
+            @click="
+              () => {
+                changeCartItemInfo(shopId, item._id, item, 1)
+              }
+            "
+          >
+            +
           </div>
         </div>
-      </template>
+      </div>
     </div>
     <div class="check">
       <div class="check__icon">
@@ -72,18 +70,13 @@ import { useCommonCartEffect } from '../../effects/cartEffects'
 
 // 获取购物车信息逻辑
 const useCartEffect = shopId => {
-  const { calculations, productList, changeCartItemInfo } = useCommonCartEffect(shopId)
+  const { calculations, productList, changeCartItemInfo, cleanCartProducts } = useCommonCartEffect(shopId)
   // vuex 获取购物车数据
   const store = useStore()
 
   // 点击选中icon的逻辑
   const changeCartItemChecked = (shopId, productId) => {
     store.commit('changeCartItemChecked', { shopId, productId })
-  }
-
-  // 清空购物车的逻辑
-  const cleanCartProducts = shopId => {
-    store.commit('cleanCartProducts', { shopId })
   }
 
   // 全选/全不选

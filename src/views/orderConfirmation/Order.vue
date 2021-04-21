@@ -8,30 +8,62 @@
       <div class="musk__content__title">确认要离开收银台？</div>
       <div class="musk__content__desc">请尽快完成支付，否则将被取消</div>
       <div class="musk__content__btn">
-        <div class="musk__content__btn--first" @click="handleCancle">取消订单</div>
-        <div class="musk__content__btn--last" @click="handleConfirm">确认支付</div>
+        <div class="musk__content__btn--first" @click="() => handleCancleOrder(true)">取消订单</div>
+        <div class="musk__content__btn--last" @click="() => handleConfirmOrder(false)">确认支付</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCommonCartEffect } from '../../effects/cartEffects'
+import { post } from '../../utils/request'
+import { useToastEffect } from '../../components/Toast'
 
 export default {
   name: 'Order',
   setup() {
+    const { showToast } = useToastEffect()
+    const router = useRouter()
     const route = useRoute()
     const shopId = route.params.id
-    const { calculations } = useCommonCartEffect(shopId)
-    const handleCancle = () => {
+    const { calculations, shopName, productList, cleanCartProducts } = useCommonCartEffect(shopId)
+    const handleCancleOrder = () => {
       alert('取消支付')
     }
-    const handleConfirm = () => {
-      alert('确认支付')
+    // 确认支付
+    const handleConfirmOrder = async isCanceled => {
+      try {
+        const produts = {}
+        for (const i in productList.value) {
+          produts[i] = {
+            id: productList.value[i]._id,
+            num: productList.value[i].count
+          }
+        }
+        // 获取输入框的用户名和密码并携带请求登录接口
+        const resulte = await post('/api/order', {
+          addressId: 1,
+          shopId,
+          shopName: shopName.value,
+          isCanceled: isCanceled,
+          products: produts
+        })
+        // 判断登录接口返回的状态码
+        if (resulte?.errno === 0) {
+          // 清空购物车
+          cleanCartProducts(shopId)
+          router.push({ name: 'Home' })
+        } else {
+          showToast('确认支付失败')
+        }
+      } catch (e) {
+        // 整个过程中有异常就弹窗提示 '请求失败'
+        showToast('请求失败')
+      }
     }
-    return { calculations, handleCancle, handleConfirm }
+    return { calculations, handleCancleOrder, handleConfirmOrder }
   }
 }
 </script>

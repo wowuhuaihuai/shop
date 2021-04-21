@@ -39,6 +39,7 @@ export const useToastEffect = () => {
 @import '../style/viriables.scss';
 
 #toast {
+  z-index: 100;
   position: fixed;
   top: 50%;
   left: 50%;
