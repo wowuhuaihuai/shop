@@ -68,11 +68,11 @@
 import { computed, ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { useCommonCartEffect } from './commonCartEffect'
+import { useCommonCartEffect } from '../../effects/cartEffects'
 
 // 获取购物车信息逻辑
 const useCartEffect = shopId => {
-  const { cartList, changeCartItemInfo } = useCommonCartEffect()
+  const { cartList, productList, changeCartItemInfo } = useCommonCartEffect(shopId)
   // vuex 获取购物车数据
   const store = useStore()
 
@@ -82,7 +82,7 @@ const useCartEffect = shopId => {
     // 定义字典 总数量,总价,全选状态
     const result = { total: 0, price: 0, allChecked: true }
 
-    // 没有商品信息，商品数量默认wi0
+    // 没有商品信息，商品数量默认0
     if (productList) {
       // 循环变量计算商品数量
       for (const i in productList) {
@@ -102,10 +102,6 @@ const useCartEffect = shopId => {
     result.price = result.price.toFixed(2)
 
     return result
-  })
-
-  const productList = computed(() => {
-    return cartList?.[shopId]?.productList || {}
   })
 
   // 点击选中icon的逻辑
