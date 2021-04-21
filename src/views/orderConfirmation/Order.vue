@@ -35,12 +35,12 @@ export default {
     // 确认支付
     const handleConfirmOrder = async isCanceled => {
       try {
-        const produts = {}
+        const produts = []
         for (const i in productList.value) {
-          produts[i] = {
-            id: productList.value[i]._id,
+          produts.push ({
+            id: parsetInt(productList.value[i]._id,10),
             num: productList.value[i].count
-          }
+          })
         }
         // 获取输入框的用户名和密码并携带请求登录接口
         const resulte = await post('/api/order', {
