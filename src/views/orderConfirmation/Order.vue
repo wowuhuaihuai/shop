@@ -1,10 +1,10 @@
 <template>
   <div class="order">
     <div class="order__price">实付金额 &yen;{{ calculations.price }}</div>
-    <div class="order__btn">提交订单</div>
+    <div class="order__btn" @click="() => handleSumitOrder(true)">提交订单</div>
   </div>
-  <div class="musk">
-    <div class="musk__content">
+  <div class="musk" v-if="showConfirm" @click="() => handleSumitOrder(false)">
+    <div class="musk__content" @click.stop>
       <div class="musk__content__title">确认要离开收银台？</div>
       <div class="musk__content__desc">请尽快完成支付，否则将被取消</div>
       <div class="musk__content__btn">
@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCommonCartEffect } from '../../effects/cartEffects'
 import { post } from '../../utils/request'
@@ -27,8 +28,14 @@ export default {
     const { showToast } = useToastEffect()
     const router = useRouter()
     const route = useRoute()
+    const showConfirm = ref(false)
     const shopId = route.params.id
     const { calculations, shopName, productList, cleanCartProducts } = useCommonCartEffect(shopId)
+
+    const handleSumitOrder = status => {
+      showConfirm.value = status
+    }
+
     const handleCancleOrder = () => {
       alert('取消支付')
     }
@@ -37,8 +44,8 @@ export default {
       try {
         const produts = []
         for (const i in productList.value) {
-          produts.push ({
-            id: parsetInt(productList.value[i]._id,10),
+          produts.push({
+            id: parseInt(productList.value[i]._id, 10),
             num: productList.value[i].count
           })
         }
@@ -63,7 +70,7 @@ export default {
         showToast('请求失败')
       }
     }
-    return { calculations, handleCancleOrder, handleConfirmOrder }
+    return { calculations, handleCancleOrder, handleConfirmOrder, showConfirm, handleSumitOrder }
   }
 }
 </script>
