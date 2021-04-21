@@ -8,10 +8,16 @@ const routes = [
     component: () => import(/* webpackChunkName: "home" */ '../views/home/Home')
   },
   {
-    path: '/CartList',
+    path: '/cartList',
     name: 'CartList',
     // component: CartList
-    component: () => import(/* webpackChunkName: "CartList" */ '../views/cartList/CartList')
+    component: () => import(/* webpackChunkName: "cartList" */ '../views/cartList/CartList')
+  },
+  {
+    path: '/OrderConfirmation/:id',
+    name: 'OrderConfirmation',
+    // component: OrderConfirmation
+    component: () => import(/* webpackChunkName: "orderConfirmation" */ '../views/orderConfirmation/OrderConfirmation')
   },
   {
     path: '/register',
