@@ -1,16 +1,16 @@
 <template>
-<!-- 首页home组件（主要是把首页的子组件都放在这里面形成首页） -->
+  <!-- 首页home组件（主要是把首页的子组件都放在这里面形成首页） -->
   <div class="wrapper">
     <StaticPart />
     <Nearby />
   </div>
-  <Docker />
+  <Docker :currentIndex="0" />
 </template>
 
 <script>
 import StaticPart from './StaticPart'
 import Nearby from './Nearby'
-import Docker from './Docker'
+import Docker from '../../components/Docker'
 export default {
   name: 'Home',
   components: {

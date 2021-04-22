@@ -1,13 +1,13 @@
 <template>
-  CartList Page
-  <Docker :currentIndex="1" />
+  Mine Page
+  <Docker :currentIndex="3" />
 </template>
 
 <script>
 import Docker from '../../components/Docker'
 
 export default {
-  name: 'CartList',
+  name: 'OrderList',
   components: { Docker }
 }
 </script>

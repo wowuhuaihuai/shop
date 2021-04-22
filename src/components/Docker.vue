@@ -1,7 +1,7 @@
 <template>
   <!-- 首页底部的 tab 栏 -->
   <div class="docker">
-    <span v-for="(item, index) in dockerList" :key="index" :class="{ docker__item: true, 'docker__item--active': index === 0 }">
+    <span v-for="(item, index) in dockerList" :key="index" :class="{ docker__item: true, 'docker__item--active': index === currentIndex }">
       <router-link :to="item.to">
         <div class="iconfont" v-html="item.icon" />
         <div class="docker__title">{{ item.text }}</div>
@@ -13,12 +13,13 @@
 <script>
 export default {
   name: 'Docker',
+  props: ['currentIndex'],
   setup() {
     const dockerList = [
       { icon: '&#xe628;', text: '首页', to: { name: 'Home' } },
       { icon: '&#xe618;', text: '购物车', to: { name: 'CartList' } },
       { icon: '&#xe75f;', text: '订单', to: { name: 'OrderList' } },
-      { icon: '&#xe63a;', text: '我的', to: { name: 'Home' } }
+      { icon: '&#xe63a;', text: '我的', to: { name: 'Mine' } }
     ]
     return { dockerList }
   }
@@ -26,7 +27,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../style/viriables.scss';
+@import '../style/viriables.scss';
 
 .docker {
   display: flex; // 弹性布局
@@ -38,6 +39,7 @@ export default {
   width: 100%;
   height: 0.49rem;
   border-top: 0.01rem solid $content-bgColor;
+  background: #FFF;
   &__item {
     flex: 1; // 均分
     text-align: center;
