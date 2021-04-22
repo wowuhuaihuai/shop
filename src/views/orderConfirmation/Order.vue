@@ -1,9 +1,9 @@
 <template>
   <div class="order">
     <div class="order__price">实付金额 &yen;{{ calculations.price }}</div>
-    <div class="order__btn" @click="() => handleSumitOrder(true)">提交订单</div>
+    <div class="order__btn" @click="() => handleShowConfirmChange(true)">提交订单</div>
   </div>
-  <div class="musk" v-if="showConfirm" @click="() => handleSumitOrder(false)">
+  <div class="musk" v-if="showConfirm" @click="() => handleShowConfirmChange(false)">
     <div class="musk__content" @click.stop>
       <div class="musk__content__title">确认要离开收银台？</div>
       <div class="musk__content__desc">请尽快完成支付，否则将被取消</div>
@@ -20,57 +20,67 @@ import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCommonCartEffect } from '../../effects/cartEffects'
 import { post } from '../../utils/request'
-import { useToastEffect } from '../../components/Toast'
+
+// 下单逻辑相关
+const useMakeOrderEffect = (shopId, shopName, productList, cleanCartProducts) => {
+  const router = useRouter()
+
+  const handleCancleOrder = () => {
+    alert('取消支付')
+  }
+  // 确认支付
+  const handleConfirmOrder = async isCanceled => {
+    try {
+      const produts = []
+      for (const i in productList.value) {
+        produts.push({
+          id: parseInt(productList.value[i]._id, 10),
+          num: productList.value[i].count
+        })
+      }
+      // 获取输入框的用户名和密码并携带请求登录接口
+      const resulte = await post('/api/order', {
+        addressId: 1,
+        shopId,
+        shopName: shopName.value,
+        isCanceled: isCanceled,
+        products: produts
+      })
+      // 判断登录接口返回的状态码
+      if (resulte?.errno === 0) {
+        // 清空购物车
+        cleanCartProducts(shopId)
+        router.push({ name: 'OrderList' })
+      } else {
+        console.log('确认支付失败')
+      }
+    } catch (e) {
+      // 整个过程中有异常就弹窗提示 '请求失败'
+      console.log('请求失败')
+    }
+  }
+  return { handleCancleOrder, handleConfirmOrder }
+}
+
+// 蒙层相关luo0ji
+const useShowMaskEttect = () => {
+  const showConfirm = ref(false)
+  const handleShowConfirmChange = status => {
+    showConfirm.value = status
+  }
+  return { showConfirm, handleShowConfirmChange }
+}
 
 export default {
   name: 'Order',
   setup() {
-    const { showToast } = useToastEffect()
-    const router = useRouter()
     const route = useRoute()
-    const showConfirm = ref(false)
     const shopId = route.params.id
     const { calculations, shopName, productList, cleanCartProducts } = useCommonCartEffect(shopId)
+    const { handleCancleOrder, handleConfirmOrder } = useMakeOrderEffect(shopId, shopName, productList, cleanCartProducts)
+    const { showConfirm, handleShowConfirmChange } = useShowMaskEttect()
 
-    const handleSumitOrder = status => {
-      showConfirm.value = status
-    }
-
-    const handleCancleOrder = () => {
-      alert('取消支付')
-    }
-    // 确认支付
-    const handleConfirmOrder = async isCanceled => {
-      try {
-        const produts = []
-        for (const i in productList.value) {
-          produts.push({
-            id: parseInt(productList.value[i]._id, 10),
-            num: productList.value[i].count
-          })
-        }
-        // 获取输入框的用户名和密码并携带请求登录接口
-        const resulte = await post('/api/order', {
-          addressId: 1,
-          shopId,
-          shopName: shopName.value,
-          isCanceled: isCanceled,
-          products: produts
-        })
-        // 判断登录接口返回的状态码
-        if (resulte?.errno === 0) {
-          // 清空购物车
-          cleanCartProducts(shopId)
-          router.push({ name: 'Home' })
-        } else {
-          showToast('确认支付失败')
-        }
-      } catch (e) {
-        // 整个过程中有异常就弹窗提示 '请求失败'
-        showToast('请求失败')
-      }
-    }
-    return { calculations, handleCancleOrder, handleConfirmOrder, showConfirm, handleSumitOrder }
+    return { calculations, handleCancleOrder, handleConfirmOrder, showConfirm, handleShowConfirmChange }
   }
 }
 </script>
