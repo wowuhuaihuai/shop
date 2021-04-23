@@ -88,6 +88,7 @@ export default {
 <style lang="scss" scoped>
 @import '../../style/viriables.scss';
 @import '../../style/mixins.scss';
+
 .order {
   position: absolute;
   left: 0;
@@ -107,7 +108,7 @@ export default {
     width: 0.98rem;
     height: 0.49rem;
     background: #4fb0f9;
-    font-size: 14px;
+    font-size: 0.14rem;
     color: $bgColor;
     text-align: center;
   }
@@ -126,19 +127,19 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #ffffff;
-    border-radius: 4px;
+    background: $bgColor;
+    border-radius: 0.04rem;
     text-align: center;
     &__title {
       line-height: 0.25rem;
       font-size: 0.18rem;
-      color: #333333;
+      color: $content-fontColor;
       margin-top: 0.24rem;
     }
     &__desc {
       line-height: 0.2rem;
-      font-size: 14px;
-      color: #666666;
+      font-size: 0.14rem;
+      color: $medium-fontColor;
       margin-top: 0.08rem;
     }
     &__btn {
@@ -147,21 +148,21 @@ export default {
       &--first {
         width: 0.8rem;
         display: inline-block;
-        font-size: 14px;
-        color: #0091ff;
-        border: 1px solid #4fb0f9;
-        border-radius: 16px;
+        font-size: 14rem;
+        color: $btn-bgColor;
+        border: 0.01rem solid $order-btn-bgColor;
+        border-radius: 0.16rem;
         margin-right: 0.12rem;
       }
       &--last {
         width: 0.8rem;
         display: inline-block;
 
-        background: #4fb0f9;
-        border: 1px solid #4fb0f9;
-        border-radius: 16px;
-        font-size: 14px;
-        color: #ffffff;
+        background: $order-btn-bgColor;
+        border: 0.01rem solid $order-btn-bgColor;
+        border-radius: 0.16rem;
+        font-size: 0.14rem;
+        color: $bgColor;
         margin-left: 0.12rem;
       }
     }

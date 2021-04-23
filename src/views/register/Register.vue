@@ -101,8 +101,8 @@ export default {
     height: 0.48rem;
     margin: 0 0.4rem 0.16rem 0.4rem;
     background: $input-bgColor;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
+    border: 0.01rem solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.06rem;
     &__content {
       width: 100%;
       border: none;

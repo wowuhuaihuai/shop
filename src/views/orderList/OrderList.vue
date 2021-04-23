@@ -100,7 +100,7 @@ export default {
 .order {
   position: relative;
   background: $bgColor;
-  border-radius: 4px;
+  border-radius: 0.04rem;
   margin: 0.16rem 0.18rem;
   &__title {
     padding: 0.16rem;

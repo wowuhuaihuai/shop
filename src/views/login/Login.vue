@@ -7,7 +7,7 @@
       <input type="text" class="wrapper__input__content" placeholder="请输入用户名" v-model="username" />
     </div>
     <div class="wrapper__input">
-      <input type="password" class="wrapper__input__content" placeholder="请输入密码" v-model="password" autocomplete="new-password"/>
+      <input type="password" class="wrapper__input__content" placeholder="请输入密码" v-model="password" autocomplete="new-password" />
     </div>
     <!-- 按钮 -->
     <div class="wrapper__login-button" @click="handleLogin">登陆</div>
@@ -106,8 +106,8 @@ export default {
     height: 0.48rem;
     margin: 0 0.4rem 0.16rem 0.4rem;
     background: $input-bgColor;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
+    border: 0.01rem solid rgba(0, 0, 0, 0.1);
+    border-radius: 0.06rem;
     &__content {
       width: 100%;
       border: none;
@@ -129,7 +129,7 @@ export default {
     box-shadow: 0 0.04rem 0.08rem 0 rgba(0, 145, 255, 0.32);
     border-radius: 0.04rem;
     border-radius: 0.04rem;
-    color:$bgColor;
+    color: $bgColor;
     line-height: 0.48rem;
     font-size: 0.16rem;
     text-align: center;

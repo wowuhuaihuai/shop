@@ -33,6 +33,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../../style/viriables.scss';
+
 .top {
   position: relative;
   height: 1.6rem;
@@ -43,7 +45,7 @@ export default {
     position: relative;
     padding-top: 0.26rem;
     line-height: 0.24rem;
-    color: #ffffff;
+    color: $bgColor;
     text-align: center;
     font-size: 0.16rem;
     &__back {
@@ -59,15 +61,14 @@ export default {
     right: 0.18rem;
     bottom: 0;
     height: 1.11rem;
-    background: #ffffff;
-    border-radius: 4px;
-    border-radius: 4px;
-    color: #333333;
+    background: $bgColor;
+    border-radius: 0.04rem;
+    color: $content-fontColor;
     &__title {
       line-height: 0.22rem;
       padding: 0.16rem 0 0.14rem 0.16rem;
       font-size: 0.16rem;
-      color: #333333;
+      color: $content-fontColor;
     }
     &__address {
       line-height: 0.2rem;
@@ -79,7 +80,7 @@ export default {
       &__name {
         line-height: 0.18rem;
         font-size: 0.12rem;
-        color: #666666;
+        color: $medium-fontColor;
         margin-right: 0.06rem;
       }
     }
@@ -87,7 +88,7 @@ export default {
       position: absolute;
       right: 0.16rem;
       top: 0.5rem;
-      color: #666;
+      color: $medium-fontColor;
       font-size: 0.2rem;
       transform: rotate(180deg);
     }
